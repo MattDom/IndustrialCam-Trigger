@@ -10,8 +10,8 @@
 
 uint8_t time_delay_0 = 0;
 const int8_t low_base_ = 10;
-const int8_t med_base_ = 10;
-const int8_t high_base_ = 10;
+const int8_t med_base_ = 0;
+const int8_t high_base_ = 0;
 
 int8_t low_temp_ = 0;
 int8_t med_temp_ = 0;
