@@ -83,68 +83,83 @@ int main(void) {
       init_shot_ = true;                    // Reset flag
 
       // PC0 - PC1
-      pin_mode_ |= ((PINC & (1 << DDC1)) << 1);
-      pin_mode_ |= ((PINC & (1 << DDC0)));
+	  pin_mode_ = 0;
+      pin_mode_ |= (PINC & (1 << DDC1));
+      pin_mode_ |= (PINC & (1 << DDC0));
 
       // PC3 - PC5
-      offset_ |= ((PINC & (1 << DDC5)) << 3);
-      offset_ |= ((PINC & (1 << DDC4)) << 2);
-      offset_ |= ((PINC & (1 << DDC3)) << 1);
-      offset_ |= (PINC & (1 << DDC2));
+	  offset_ = 0;
+      offset_ |= ((PINC & (1 << DDC5))>>2) | ((PINC & (1 << DDC4))>>2) | ((PINC & (1 << DDC3))>>2) | ((PINC & (1 << DDC2))>>2);
 
       // Switch to selcted mode
       switch (pin_mode_) {
-        case (0):
+        case 0:
           mode = loop_;
           break;
         case 1:
           mode = low_;
           switch (offset_) {
             case 0:
-              low_temp_ = -20;
-              break;
-            case 1:
               low_temp_ = -10;
               break;
+            case 1:
+              low_temp_ = 0;
+              break;
             case 2:
+			  low_temp_ = 10;
               break;
             case 3:
-              low_temp_ = 10;
-              break;
-            case 4:
               low_temp_ = 20;
               break;
+            case 4:
+              low_temp_ = 30;
+              break;
+			case 5:
+              low_temp_ = 40;
+              break;
+			case 6:
+              low_temp_ = 50;
+              break;
+			case 7:
+              low_temp_ = 60;
+              break;
+			case 8:
+              low_temp_ = 70;
+              break;			  			  
             default:
+			  low_temp_ = 0;
               break;
           }
 
           low_value = low_base_ + low_temp_;
           break;
-        case 2:
+        case 3:
           mode = medium_;
           med_value += low_value;
           switch (offset_) {
             case 0:
-              med_temp_ = -10;
+              med_temp_ = 0;
               break;
             case 1:
-              med_temp_ = -5;
+              med_temp_ = 2;
               break;
             case 2:
+			  med_temp_ = 4;
               break;
             case 3:
-              med_temp_ = 5;
+              med_temp_ = 6;
               break;
             case 4:
-              med_temp_ = 10;
+              med_temp_ = 8;
               break;
             default:
+			  med_temp_ = 0;
               break;
           }
 
           med_value = med_base_ + med_temp_ + low_value;
           break;
-        case 3:
+        case 2:
           mode = high_;
           high_value += med_value;
           switch (offset_) {
@@ -155,6 +170,7 @@ int main(void) {
               high_temp_ = -1;
               break;
             case 2:
+			  high_temp_ = 0;
               break;
             case 3:
               high_temp_ = 1;
@@ -163,6 +179,7 @@ int main(void) {
               high_temp_ = 2;
               break;
             default:
+			  high_temp_ = 0;
               break;
           }
 
