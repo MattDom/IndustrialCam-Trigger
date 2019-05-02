@@ -17,7 +17,6 @@ enum { loop_, low_, medium_, high_ } mode;
 
 uint8_t trigger = 0;
 uint8_t pin_mode_ = 0;
-
 uint8_t offset_ = 0;
 
 bool button = false;
@@ -25,15 +24,11 @@ bool shot_done = false;
 bool init_shot_ = true;
 
 void single_shot();
-/*void loop_mode();
-void low_freq();
-void med_freq();
-void high_freq();*/
 
 int main(void) {
   DDRB |= (1 << DDB0) | (1 << DDB1) | (1 << DDB2) | (1 << DDB3) | (1 << DDB4);
-  DDRC &= ~(1 << DDC0) | ~(1 << DDC1) | ~(1 << DDC2) | ~(1 << DDC3) |
-          ~(1 << DDC4) | ~(1 << DDC4);
+  DDRC = 0x00;
+  PORTC = 0xFF;	  
   DDRD |= (1 << DDD4) | (1 << DDD5) | (1 << DDD6) | (1 << DDD7);
   DDRD &= ~(1 << DDD2) & ~(1 << DDD3);
 
@@ -164,13 +159,13 @@ int main(void) {
           high_value += med_value;
           switch (offset_) {
             case 0:
-              high_temp_ = -2;
+			  high_temp_ = 0;              
               break;
             case 1:
-              high_temp_ = -1;
+              high_temp_ = -2;
               break;
             case 2:
-			  high_temp_ = 0;
+			  high_temp_ = -1;
               break;
             case 3:
               high_temp_ = 1;

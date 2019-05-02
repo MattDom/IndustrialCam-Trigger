@@ -22,6 +22,7 @@ int8_t med_value = 0;
 int8_t high_value = 0;
 
 uint8_t loop_mode_select = 0;
+uint8_t loop_count = 0;
 
 void low_freq()
 {
@@ -151,19 +152,28 @@ void high_freq()
 
 void loop_mode()
 {
-	if (loop_mode_select == 0)
+	switch(loop_mode_select % 3)
 	{
-		low_freq();
+		case 0:  		
+		  low_freq();
+		  loop_count++;
+		  break;
+		case 1:
+		  med_freq();
+		  loop_count++;
+		  break;
+		case 2:
+		  high_freq();
+		  loop_count++;
+		  break;
 	}
-	else if (loop_mode_select == 1)
+
+	if (loop_count == 100)
 	{
-		med_freq();
+		loop_count = 0;
+		loop_mode_select++;
 	}
-	else
-	{
-		high_freq();
-		loop_mode_select = 0;
-	}
+	
 }
 
 #endif /* TRIGGER_MODES_H_ */
