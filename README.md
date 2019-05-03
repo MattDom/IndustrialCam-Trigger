@@ -24,16 +24,42 @@ The below listed hard- and software items are what is required to run everything
 - some prototyping pcb
 
 ### Software
+There is no need for additional software or SDKs. This code was developed and originally compiled with Atmel Studio 7.0 (gcc 5.4.0).   
+For adjusting and saving the neccesary options, the [Flycapture-SDK](https://www.flir.de/products/flycapture-sdk/) by FLIR may be a good choice. But, this is not mandatory for using this package. However, for using the cameras with [ROS](https://www.ros.org/) another possible configuration will be provided later.
 
-## Usage
-### Single Shot
-### Loop-mode
+# Usage
 
-## Synchronization
-### Expectations
-### Preparing
-### Doing
+In general there are two modes to run the triggered stereo-system. At first there is a single-shot mode, which trigger both cameras simultaniously for one frame. The second one is the loop-mode. This is the *normal* mode, that runs continously with 10 Hz. Actually this frame rate it fix, but not *un-editable*. If the single-shot mode is not needed, just connect __PD2__ and __PD3__ to ground to avoid strange effects.
 
-## Hardware
-### 3D-prints
-### PCB
+## Single-Shot
+
+The single-shot mode is choosen with the rocker switch, attached on __PD3__. Once the single-shot mode is activated the next frame it triggered by pushing the pushbutton linked to __PD2__.
+
+## Loop-mode
+
+The loop-mode is executed with 10 Hz by pulling __PD3__ to ground. The state of __PD2__ has no effect in this state.
+
+# Synchronization
+## Expectations
+## Preparing
+## Doing
+
+# Hardware
+## 3D-prints
+## PCB
+
+# Additional notes
+Some additional informations for using this package.
+## ROS
+With ROS, the usage of the _Flycatpure_-SDK is not needed for this package. For example use (this driver-node)[https://github.com/ros-drivers/pointgrey_camera_driver]. The only mandatory parameter is listed below.
+
+```C
+# Trigger parameters
+gen.add("enable_trigger",       bool_t,   SensorLevels.RECONFIGURE_RUNNING,   "Enable the external triggering mode.",                                                        False)
+```
+However, this package was designed for using the following parameters in the ROS launchfile.
+
+## Upcoming features
+* Changing frame rate individuals
+* Displaying the actual synchronization-offset with sevseg-modules
+* Trigger both cameras separately and save the correct delays in the eeprom
