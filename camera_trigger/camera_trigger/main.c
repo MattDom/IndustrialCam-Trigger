@@ -187,9 +187,8 @@ int main(void) {
   }      // while()
 }  // main()
 
-ISR(TIMER1_COMPA_vect) {
-  time_delay_0++;
-
+ISR(TIMER1_COMPA_vect)
+{
   if (mode == loop_) {
     loop_mode();
   } else if (mode == low_) {
@@ -199,7 +198,7 @@ ISR(TIMER1_COMPA_vect) {
   } else if (mode == high_) {
     high_freq();
   }
-
+  time_delay_0++;
   // ####### 100ms Periode #######
   if (time_delay_0 <= 10) {
     PORTD &= ~(1 << DDD6);
@@ -208,8 +207,9 @@ ISR(TIMER1_COMPA_vect) {
     if (time_delay_0 == 100) {
       time_delay_0 = 0;
       shot_done = true;
+	  num_leds = 0;
     }
-  }
+  }  
 }
 
 ISR(INT0_vect) {
