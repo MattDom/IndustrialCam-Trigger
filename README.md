@@ -1,5 +1,5 @@
 # IndustrialCam-Trigger
-
+  
 This is a package for triggering and synchronizing industrial cameras by [Point Grey Research](https://www.flir.com/) (now FLIR) in a stereo-setup. Please read this readme carfully before usage.  
 
 In principle every camera that provides a hardware trigger can be used with this package. But, the pin assignments/timings/etc. may vary.
@@ -63,3 +63,6 @@ However, this package was designed for using the following parameters in the ROS
 * Changing frame rate individuals
 * Displaying the actual synchronization-offset with sevseg-modules
 * Trigger both cameras separately and save the correct delays in the eeprom
+
+## Credits
+I'm happy if you can make use of this software and even more if you can use it in your academic work. If you do so, feel free to cite this by [![DOI](https://zenodo.org/badge/183741394.svg)](https://zenodo.org/badge/latestdoi/183741394). At least this software it free and there is no need to cite it.
