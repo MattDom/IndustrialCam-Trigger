@@ -9,9 +9,11 @@
 
 #include <avr/interrupt.h>
 #include <avr/io.h>
+#include <avr/sleep.h>
 #include <stdbool.h>
 #include <util/delay.h>
-#include "trigger_modes.h"
+
+#include <trigger_modes.h>
 
 enum { loop_, low_, medium_, high_ } mode;
 
@@ -31,24 +33,21 @@ int main(void) {
     PORTC = 0xFF;
     DDRD |= (1 << DDD4) | (1 << DDD5) | (1 << DDD6) | (1 << DDD7);
     DDRD &= ~(1 << DDD2) & ~(1 << DDD3);
-
-    // Timer 1 konfigurieren
+    
+    // Configure Timer 1
     TCCR1A |= (1 << COM1A1);  // Toggle OC1A/OC1B on Compare Match
-    TCCR1B &= ~(1 << CS12) & ~(1 << CS11) & ~(1 << CS10);
+    TCCR1B &= ~(1 << CS12) & ~(1 << CS11) & ~(1 << CS10); // Clear prescaler (just to be save)
     TCCR1B |= (1 << WGM12);  // CTC-Mode
-    OCR1A = 249;             // Plus eins für den ÜberlauF!
+    OCR1A = 249;             // Set compare-value
 
-    // Compare Interrupt erlauben
-    TIMSK1 |= (1 << OCIE1A);
-
+    TIMSK1 |= (1 << OCIE1A); // Activate compare interrupt
     EICRA |= ((1 << ISC01) | (1 << ISC00));  // Enable INT0
 
-    // Global Interrupts aktivieren
     sei();
 
-    TCNT1H = 0x0;
-    TCNT1L = 0x0;
-    TCCR1B |= (1 << CS11) | (1 << CS10);  // Timer 1 aktivieren (Prescaler auf 64)
+    TCNT1H = 0x0; // Initialize timer counter...
+    TCNT1L = 0x0; // ... to be save
+    TCCR1B |= (1 << CS11) | (1 << CS10);  // Set the prescaler to 64
 
     while (1) {
         if (PIND & (1 << DDD3))  // Check for single-shot-mode
@@ -125,38 +124,41 @@ int main(void) {
                     low_temp_ = 0;
                     break;
                 }
+                
                 low_value = low_base_ + low_temp_;
+                             
                 break;
                 
                 case 3:
                 mode = medium_;
-                med_value += low_value;
+                //med_value += low_value;
                 switch (offset_) {
                     case 0:
                     med_temp_ = 0;
                     break;
                     case 1:
-                    med_temp_ = 2;
+                    med_temp_ = 5;
                     break;
                     case 2:
-                    med_temp_ = 4;
+                    med_temp_ = 10;
                     break;
                     case 3:
-                    med_temp_ = 6;
+                    med_temp_ = 15;
                     break;
                     case 4:
-                    med_temp_ = 8;
+                    med_temp_ = 20;
                     break;
                     default:
-                    med_temp_ = 0;
+                    med_temp_ = 25;
                     break;
                 }
 
-                med_value = med_base_ + med_temp_ + low_value;
+                med_value = med_base_ + med_temp_;
+                
                 break;
                 case 2:
                 mode = high_;
-                high_value += med_value;
+                //high_value += med_value;
                 switch (offset_) {
                     case 0:
                     high_temp_ = 0;
@@ -177,19 +179,22 @@ int main(void) {
                     high_temp_ = 0;
                     break;
                 }
-                high_value = high_base_ + high_temp_ + med_value;
+                
+                high_value = high_base_ + high_temp_;
+                
                 break;
                 
                 default:
                 break;
             }  // switch-case
         }    // if...else
-    }      // while()
+        //sleep_mode(); // Take a nap
+    }   // while()
 }  // main()
 
 ISR(TIMER1_COMPA_vect)
 {
-    if (mode == loop_) {
+      if (mode == loop_) {
         loop_mode();
         } else if (mode == low_) {
         low_freq();
