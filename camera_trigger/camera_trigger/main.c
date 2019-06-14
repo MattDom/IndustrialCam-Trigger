@@ -20,6 +20,7 @@ enum { loop_, low_, medium_, high_ } mode;
 uint8_t trigger = 0;
 uint8_t pin_mode_ = 0;
 uint8_t offset_ = 0;
+uint8_t framerate = 100; // Time-intervall in ms --> framerate = 1/FPS*1000
 
 bool button = false;
 bool shot_done = false;
@@ -209,7 +210,7 @@ ISR(TIMER1_COMPA_vect)
         PORTD &= ~(1 << DDD6);
         } else {
         PORTD |= (1 << DDD6);  // Fire trigger
-        if (time_delay_0 == 100) {
+        if (time_delay_0 == framrate) {
             time_delay_0 = 0;
             shot_done = true;
             num_leds = 0;
