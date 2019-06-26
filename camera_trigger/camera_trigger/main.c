@@ -196,7 +196,7 @@ int main(void) {
 ISR(TIMER1_COMPA_vect)
 {
       if (mode == loop_) {
-        loop_mode();
+        //loop_mode();
         } else if (mode == low_) {
         low_freq();
         } else if (mode == medium_) {
